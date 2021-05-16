@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Patient Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <div class="text-center">
+          <a href="/tickets">
+            <button class="btn btn-lg btn-success">
+              <span class="fa fa-list-alt"></span> View Tickets
+            </button>
+          </a>
+          <a href="/">
+            <button class="btn btn-lg btn-default">
+              <span class="fa fa-home"></span>
+            </button>
+          </a>
+        </div>
+      </div>
+      <div class= "card-deck">
+        <div class="card">
+          <div class="card-body">
+            <form role="form">
+              <label for="actions">Actions</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioAdd">
+                <label class="form-check-label" for="patientRadioAdd">
+                  Add
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioView">
+                <label class="form-check-label" for="patientRadioView">
+                  View
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioUpdate">
+                <label class="form-check-label" for="patientRadioUpdate">
+                  Update
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioDelete">
+                <label class="form-check-label" for="patientRadioDelete">
+                  Delete
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="search-by-name">Search By Name</label>
+                <input type="text" class="form-control" id="search-by-name"/>
+                <button type="search" class="btn btn-success search">
+                  Search
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- Add to database -->
+          <div class="card">
+            <div class="card-header">
+              Add Patient
+            </div>
+            <div class="card-body">
+              <form role="form">
+                <div class="form-group">
+                  <label for="patient-id">ID</label>
+                  <input type="text" class="form-control" id="patient-id" /><!--Was "reserve-name"-->
+                </div>
+                <div class="form-group">
+                  <label for="patient-name">Name</label>
+                  <input type="text" class="form-control" id="patient-name" /><!--Was "reserve-phone"-->
+                </div>
+                <div class="form-group">
+                  <label for="patient-dob">Date of Birth</label>
+                  <input type="text" class="form-control" id="patient-dob" /><!--Was "reserve-email"-->
+                </div>
+                </div>
+                <button type="submit" class="btn btn-success submit">
+                  Submit
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="container">
+          <p>
+            <a href="/api/tables">API Ticket Link</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
+<script type="text/javascript">
+  // In this code below we create the Front-end JavaScript which "POSTS" our form data to our express server.
+  // In essence, when the user hits submit, document.getElementById grabs all of the fields then sends a post request to our api
+  // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
+  // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
+  const submitBtn = document.querySelector('.submit');
+  submitBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // Grab form elements
+    let newPatient = {
+      patientID: document.getElementById('patient-id').value.trim(),
+      patientName: document.getElementById('patient-name').value.trim(),
+      patientDob: document.getElementById('patient-dob').value.trim(),
+    };
+
+    console.log('submitBtn.onclick -> newPatient', newPatient);
+
+    // Here we make our fetch by providing a URL, the object we want to send as the body object, then we have a "promise".
+    // The promise is the response of the server. In our case, we set up code in api-routes that "returns" true or false
+    // depending on if a tables is available or not.
+
+    fetch('/api/tables', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newPatient),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          // If a table is available... tell user they are booked.
+
+          alert('Yay! You are officially booked!');
+        } else {
+          // Otherwise, tell the  user they are on the wait list
+
+          alert('Sorry you are on the wait list');
+
+          // Clear the form
+          document.getElementById('reserve-name').value = '';
+          document.getElementById('reserve-phone').value = '';
+          document.getElementById('reserve-email').value = '';
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
+</script>
