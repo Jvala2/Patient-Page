@@ -132,7 +132,7 @@
             listItem.appendChild(dobEl);
 
             // Append listItem to tableList
-            tableList.appendChild(listItem);
+            ticketList.appendChild(listItem);
           }
         })
         .catch((error) => {
@@ -141,7 +141,7 @@
     };
 
     // This function resets all of the data in our tables. This is intended to let you restart a demo.
-    const clearTable = () => {
+    const clearTickets = () => {
       alert('Clearing...');
 
       fetch('/api/clear', {
@@ -162,11 +162,10 @@
     };
 
     let clear = document.getElementById('clear');
-    clear.addEventListener('click', clearTable)
+    clear.addEventListener('click', clearTickets)
 
     // Run Queries!
     // ==========================================
-    runTableQuery();
-    runWaitListQuery();
+    runTicketQuery();
   </script>
 </html>
