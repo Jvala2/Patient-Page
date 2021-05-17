@@ -14,8 +14,8 @@ module.exports = (app) => {
     res.sendFile(path.join(__dirname, '../public/tickets.html'));
   });
 
-  app.get('/patients', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/patients.html'));
+  app.get('/patient', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/patient.html'));
   });
 
   // If no matching route is found default to home
