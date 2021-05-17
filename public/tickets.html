@@ -59,12 +59,22 @@
           </div>
         </div>
       </div>
-
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- Current Tickets -->
+          <div class="card">
+            <div class="card-header">
+              <h4>Tickets</h4>
+            </div>
+            <div class="card-body">
+              <ul id="ticketList" class="list-group"></ul>
+            </div>
+          </div>
       <footer class="footer mt-4">
         <div class="container">
           <p>Control Panel</p>
           <p>
-            <a href="#" id="clear">Clear Table</a> |
+            <a href="#" id="clear">Clear Tickets</a> |
             <a href="/api/tables">API Table Link</a> |
             <a href="/api/waitlist">API Wait List</a>
           </p>
@@ -78,117 +88,51 @@
     // We then dynamically display this content in our table. This is very similar to the group projects you just completed.
     // It's also very similar to the NYT search application.
 
-    const runTableQuery = () => {
+    const runTicketQuery = () => {
       // Fetch function GET the data associated with it (initially set to localhost)
-      fetch('/api/tables', {
+      fetch('/api/tickets', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       })
         .then((response) => response.json())
-        .then((tableData) => {
-          console.log('tableData', tableData);
+        .then((ticketData) => {
+          console.log('ticketData', ticketData);
           console.log('------------------------------------');
 
-          for (let i = 0; i < tableData.length; i++) {
+          for (let i = 0; i < ticketData.length; i++) {
             // Get a reference to the tableList element and populate it with tables
-            const tableList = document.getElementById('tableList');
+            const ticketList = document.getElementById('ticketList');
 
             // Then display the fields in the HTML (Section Name, Date, URL)
             let listItem = document.createElement('li');
             listItem.classList.add('list-group-item', 'mt-4');
 
             // Create elements for Table ID, ID, Name, Email, Phone
-            const tableEl = document.createElement('h2');
-            tableEl.textContent = `Table #${i + 1}`;
+            const ticketEl = document.createElement('h2');
+            ticketEl.textContent = `Ticket #${i + 1}`;
 
             const hrBreak = document.createElement('hr');
 
-            const idEl = document.createElement('h2');
-            idEl.textContent = `ID: ${tableData[i].customerID}`;
-
             const nameEl = document.createElement('h2');
-            nameEl.textContent = `Name: ${tableData[i].customerName}`;
+            nameEl.textContent = `Name: ${ticketData[i].patientName}`;
 
-            const emailEl = document.createElement('h2');
-            emailEl.textContent = `Email: ${tableData[i].customerEmail}`;
+            const idEl = document.createElement('h2');
+            idEl.textContent = `ID: ${ticketData[i].patientID}`;
 
-            const phoneEl = document.createElement('h2');
-            phoneEl.textContent = `Phone: ${tableData[i].phoneNumber}`;
+            const dobEl = document.createElement('h2');
+            dobEl.textContent = `Email: ${ticketData[i].patientDob}`;
 
             // Append all elements to the listItem
-            listItem.appendChild(tableEl);
+            listItem.appendChild(ticketEl);
             listItem.appendChild(hrBreak);
-            listItem.appendChild(idEl);
             listItem.appendChild(nameEl);
-            listItem.appendChild(emailEl);
-            listItem.appendChild(phoneEl);
+            listItem.appendChild(idEl);
+            listItem.appendChild(dobEl);
 
             // Append listItem to tableList
             tableList.appendChild(listItem);
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    };
-
-    const runWaitListQuery = () => {
-      fetch('/api/waitlist', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => response.json())
-        .then((waitData) => {
-          // Here we then log the waitlistData to console, where it will show up as an object.
-          console.log('runWaitListQuery -> waitData', waitData);
-          console.log('------------------------------------');
-
-          // Loop through and display each of the customers
-          for (let i = 0; i < waitData.length; i++) {
-            // Get a reference to the waitList element and populate it with tables
-            const waitList = document.getElementById('waitList');
-            console.log('runWaitListQuery -> waitList', waitList);
-
-            // Then display the fields in the HTML (Section Name, Date, URL)
-            let listItem = document.createElement('li');
-            listItem.classList.add('list-group-item', 'mt-4');
-
-            // Add elements that will display customer ID, name, email and phone number
-            const tableEl = document.createElement('h2');
-            tableEl.textContent = 'Table #' + (i + 1);
-            console.log('runWaitListQuery -> tableEl', tableEl);
-
-            const hrBreak = document.createElement('hr');
-
-            const idEl = document.createElement('h2');
-            idEl.textContent = `ID: ${waitData[i].customerID}`;
-            console.log('runWaitListQuery -> idEl', idEl);
-
-            const nameEl = document.createElement('h2');
-            nameEl.textContent = `Name: ${waitData[i].customerName}`;
-            console.log('runWaitListQuery -> nameEl', nameEl);
-
-            const emailEl = document.createElement('h2');
-            emailEl.textContent = `Email: ${waitData[i].customerEmail}`;
-            console.log('runWaitListQuery -> emailEl', emailEl);
-
-            const phoneEl = document.createElement('h2');
-            phoneEl.textContent = `Phone: ${waitData[i].phoneNumber}`;
-            console.log('runWaitListQuery -> phoneEl', phoneEl);
-
-            // Append all elements to the listItem
-            listItem.appendChild(tableEl);
-            listItem.appendChild(hrBreak);
-            listItem.appendChild(idEl);
-            listItem.appendChild(nameEl);
-            listItem.appendChild(emailEl);
-            listItem.appendChild(phoneEl);
-
-            waitList.appendChild(listItem);
           }
         })
         .catch((error) => {
@@ -208,11 +152,9 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          let waitList = document.getElementById('waitList');
+          let ticketList = document.getElementById('ticketList');
           waitList.innerHTML = '';
 
-          let tableList = document.getElementById('tableList');
-          tableList.innerHTML = '';
         })
         .catch((error) => {
           console.error('Error:', error);

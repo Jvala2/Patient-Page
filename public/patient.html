@@ -141,16 +141,16 @@
       },
       body: JSON.stringify(newPatient),
     })
-      .then((response) => response.json())
+      //.then((response) => response.json())
       .then((data) => {
         if (data) {
           // If a table is available... tell user they are booked.
 
-          alert('Yay! You are officially booked!');
+          alert('Submitted');
         } else {
           // Otherwise, tell the  user they are on the wait list
 
-          alert('Sorry you are on the wait list');
+          alert('Sorry');
 
           // Clear the form
           document.getElementById('reserve-name').value = '';
@@ -159,7 +159,7 @@
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error('Error:'+error);
       });
   });
 </script>
