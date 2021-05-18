@@ -29,7 +29,7 @@
             <form role="form">
               <label for="actions">Actions</label>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioAdd">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioAdd" onclick="addButtonFunction()" unchecked>
                 <label class="form-check-label" for="patientRadioAdd">
                   Add
                 </label>
@@ -66,6 +66,9 @@
                 <button type="search" class="btn btn-success search">
                   Search
                 </button>
+                <div id= "formMessage">
+
+                </div>
               </div>
             </form>
           </div>
@@ -74,7 +77,7 @@
       <div class="row">
         <div class="col-lg-12">
           <!-- Add to database -->
-          <div class="card">
+          <div class="card" id="addPatientArea">
             <div class="card-header">
               Add Patient
             </div>
@@ -101,11 +104,22 @@
           </div>
         </div>
       </div>
-
+      <div class="container">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <div class="card-header">
+              <div class="card-body">
+                <div id="errorMessage">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <footer class="footer">
         <div class="container">
           <p>
-            <a href="/api/tables">API Ticket Link</a>
+            <a href="/api/tickets">API Ticket Link</a>
           </p>
         </div>
       </footer>
@@ -115,7 +129,9 @@
 
 <!-- The code below is Javascript -->
 <script type="text/javascript">
-  
+
+onload=document.getElementById('addPatientArea').style.display='none'
+
   const submitBtn = document.querySelector('.submit');
   submitBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -141,19 +157,63 @@
       //.then((response) => response.json())
       .then((data) => {
         if (data) {
-
-          alert('Submitted');
+          var patientName= document.getElementById('patient-name').value.trim();
+          document.getElementById('errorMessage').innerText = `${patientName} has been saved.`;
+          document.getElementById('patient-name').value = '';
+          document.getElementById('patient-id').value = '';
+          document.getElementById('patient-dob').value = '';
         } else {
 
-          alert('Sorry');
+          document.getElementById('errorMessage').innerText = "Name/ID/DOB format is incorrect";
 
-          document.getElementById('reserve-name').value = '';
-          document.getElementById('reserve-phone').value = '';
-          document.getElementById('reserve-email').value = '';
+          document.getElementById('patient-name').value = '';
+          document.getElementById('patient-id').value = '';
+          document.getElementById('patient-dob').value = '';
         }
       })
       .catch((error) => {
         console.error('Error:'+error);
       });
   });
+
+
+  const searchBtn = document.querySelector('.search');
+  searchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const runTicketQuery = (search) => {
+      document.getElementById('search-by-name').style.display='block'
+      fetch(`/api/patient?search=${search}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((ticketData) => {
+          console.log('ticketData', ticketData);
+          console.log('------------------------------------');
+          if (search == ticketData) {
+            document.getElementById('formMessage').innerText = "That patient already exists."
+          } else {
+            document.getElementById('formMessage').innerText = "Patient not found."
+          }
+        });
+    };
+  })
+
+
+
+
+
+
+  function addButtonFunction() {
+    var addVisible = document.getElementById("addPatientArea");
+    if (addVisible.style.display === "none") {
+      addVisible.style.display = "block";
+    } else {
+
+    }
+  }
+
 </script>
