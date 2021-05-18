@@ -82,13 +82,11 @@
     </div>
   </body>
 
-  <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS LOADED FROM OUR SERVER -->
+  <!-- The code below is Javascript -->
   <script type="text/javascript">
 
   onload=document.getElementById('show').style.display='none'
-    // We then dynamically display this content in our table. This is very similar to the group projects you just completed.
-    // It's also very similar to the NYT search application.
-
+  
     const runTicketQuery = (search) => {
       document.getElementById('show').style.display='block'
       fetch(`/api/tickets?search=${search}`, {
@@ -105,13 +103,10 @@
           ticketList.innerHTML="";
 
           for (let i = 0; i < ticketData.length; i++) {
-            // Get a reference to the tableList element and populate it with tables
-            
-            // Then display the fields in the HTML (Section Name, Date, URL)
+
             let listItem = document.createElement('li');
             listItem.classList.add('list-group-item', 'mt-4');
 
-            // Create elements for Table ID, ID, Name, Email, Phone
             const ticketEl = document.createElement('h2');
             ticketEl.textContent = `Ticket #${i + 1}`;
 
@@ -133,7 +128,7 @@
             listItem.appendChild(idEl);
             listItem.appendChild(dobEl);
 
-            // Append listItem to tableList
+            // Append listItem to ticketList
             ticketList.appendChild(listItem);
           }
         })
@@ -144,7 +139,6 @@
 
 
 
-    // This function resets all of the data in our tables. This is intended to let you restart a demo.
     const clearTickets = () => {
       alert('Clearing...');
 
@@ -174,8 +168,7 @@
       runTicketQuery(search);
     })
     document.getElementById("viewTicket").addEventListener('click', () => runTicketQuery(""));
-    // Run Queries!
-    // ==========================================
+
     runTicketQuery();
   </script>
 </html>
