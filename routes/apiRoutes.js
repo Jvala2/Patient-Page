@@ -13,7 +13,13 @@ module.exports = (app) => {
   // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
   // ---------------------------------------------------------------------------
 
-  app.get('/api/tickets', (req, res) => res.json(ticketData));
+  app.get('/api/tickets', (req, res) => {
+    const search = req.query.search.toLowerCase();
+    if (search) {
+      const tickets = ticketData.filter(ticket => ticket.patientID.toLowerCase().includes(search)||ticket.patientName.toLowerCase().includes(search)||ticket.patientDob.toLowerCase().includes(search))
+      res.json(tickets)
+    } else {res.json(ticketData)}
+    });
 
 
   // API POST Requests

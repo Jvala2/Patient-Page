@@ -34,7 +34,7 @@
       <div class= "card-deck">
         <div class="card">
           <div class="card-body">
-            <form role="form">
+            <form role="form" id="searchForm">
               <div class="form-group">
                 <label for="search-by-name">Search By Name</label>
                 <input type="text" class="form-control" id="search-by-name"/>
@@ -51,16 +51,16 @@
           <!-- Add to database -->
           <div class="card">
             <div class="card-body">
-                <button type="submit" class="btn btn-success submit" id="viewTicket">
+                <button class="btn btn-success submit" id="viewTicket">
                   View Ticket
                 </button>
-              </form>
+            
             </div>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12" id='show'>
           <!-- Current Tickets -->
           <div class="card">
             <div class="card-header">
@@ -84,12 +84,14 @@
 
   <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS LOADED FROM OUR SERVER -->
   <script type="text/javascript">
+
+  onload=document.getElementById('show').style.display='none'
     // We then dynamically display this content in our table. This is very similar to the group projects you just completed.
     // It's also very similar to the NYT search application.
 
-    const runTicketQuery = () => {
-      // Fetch function GET the data associated with it (initially set to localhost)
-      fetch('/api/tickets', {
+    const runTicketQuery = (search) => {
+      document.getElementById('show').style.display='block'
+      fetch(`/api/tickets?search=${search}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -99,11 +101,12 @@
         .then((ticketData) => {
           console.log('ticketData', ticketData);
           console.log('------------------------------------');
+          const ticketList = document.getElementById('ticketList');
+          ticketList.innerHTML="";
 
           for (let i = 0; i < ticketData.length; i++) {
             // Get a reference to the tableList element and populate it with tables
-            const ticketList = document.getElementById('ticketList');
-
+            
             // Then display the fields in the HTML (Section Name, Date, URL)
             let listItem = document.createElement('li');
             listItem.classList.add('list-group-item', 'mt-4');
@@ -121,7 +124,7 @@
             idEl.textContent = `ID: ${ticketData[i].patientID}`;
 
             const dobEl = document.createElement('h2');
-            dobEl.textContent = `Email: ${ticketData[i].patientDob}`;
+            dobEl.textContent = `DOB: ${ticketData[i].patientDob}`;
 
             // Append all elements to the listItem
             listItem.appendChild(ticketEl);
@@ -138,6 +141,8 @@
           console.error('Error:', error);
         });
     };
+
+
 
     // This function resets all of the data in our tables. This is intended to let you restart a demo.
     const clearTickets = () => {
@@ -163,6 +168,12 @@
     let clear = document.getElementById('clear');
     clear.addEventListener('click', clearTickets)
 
+    document.getElementById("searchForm").addEventListener("submit",(event)=> {
+      event.preventDefault()
+      var search=document.getElementById("search-by-name").value
+      runTicketQuery(search);
+    })
+    document.getElementById("viewTicket").addEventListener('click', () => runTicketQuery(""));
     // Run Queries!
     // ==========================================
     runTicketQuery();
