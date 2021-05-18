@@ -59,7 +59,7 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <form role="form">
+            <form role="form" id="searchForm">
               <div class="form-group">
                 <label for="search-by-name">Search By Name</label>
                 <input type="text" class="form-control" id="search-by-name"/>
@@ -96,7 +96,7 @@
                   <input type="text" class="form-control" id="patient-dob" />
                 </div>
                 </div>
-                <button type="submit" class="btn btn-success submit">
+                <button type="submit" id="btnSearch" class="btn btn-success submit">
                   Submit
                 </button>
               </form>
@@ -180,10 +180,10 @@ onload=document.getElementById('addPatientArea').style.display='none'
   const searchBtn = document.querySelector('.search');
   searchBtn.addEventListener('click', (e) => {
     e.preventDefault();
-
+  
     const runTicketQuery = (search) => {
-      document.getElementById('search-by-name').style.display='block'
-      fetch(`/api/patient?search=${search}`, {
+      // document.getElementById('search-by-name').style.display='block'
+      fetch(`/api/tickets?search=${search}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -198,15 +198,23 @@ onload=document.getElementById('addPatientArea').style.display='none'
           } else {
             document.getElementById('formMessage').innerText = "Patient not found."
           }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
         });
     };
+
+
+  document.getElementById("searchForm").addEventListener("submit",(event)=> {
+      event.preventDefault()
+      var search=document.getElementById("search-by-name").value
+      runTicketQuery(search);
+    })
+    document.getElementById("btnSearch").addEventListener('click', () => runTicketQuery(""));
+
+    runTicketQuery();
+
   })
-
-
-
-
-
-
   function addButtonFunction() {
     var addVisible = document.getElementById("addPatientArea");
     if (addVisible.style.display === "none") {
