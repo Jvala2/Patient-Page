@@ -29,27 +29,26 @@
             <form role="form">
               <label for="actions">Actions</label>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioAdd" onclick="addButtonFunction()" unchecked>
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioAdd" onclick="addButtonFunction()">
                 <label class="form-check-label" for="patientRadioAdd">
                   Add
                 </label>
               </div>
               <div class="form-check">
-                <a href="/tickets">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioView">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioView" onclick="viewButtonFunction()">
                 </a>
                 <label class="form-check-label" for="patientRadioView">
                   View
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioUpdate">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioUpdate" onclick="updateButtonFunction()">
                 <label class="form-check-label" for="patientRadioUpdate">
                   Update
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioDelete">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="patientRadioDelete" onclick="deleteButtonFunction()">
                 <label class="form-check-label" for="patientRadioDelete">
                   Delete
                 </label>
@@ -103,6 +102,90 @@
             </div>
           </div>
         </div>
+          <!-- View-->
+          <div class="card" id="viewPatientArea">
+            <div class="card-header">
+              View Patients
+            </div>
+            <div class="card-body">
+              <form role="form">
+                <div class="form-group">
+                  <label for="patient-id">ID</label>
+                  <input type="text" class="form-control" id="patient-id" />
+                </div>
+                <div class="form-group">
+                  <label for="patient-name">Name</label>
+                  <input type="text" class="form-control" id="patient-name" />
+                </div>
+                <div class="form-group">
+                  <label for="patient-dob">Date of Birth</label>
+                  <input type="text" class="form-control" id="patient-dob" />
+                </div>
+                </div>
+                <button type="submit" id="btnSearch" class="btn btn-success submit">
+                  Submit
+                </button>
+              </form>
+            </div>
+          </div>
+
+
+
+          <!--Update Database-->
+          <div class="card" id="updatePatientArea">
+            <div class="card-header">
+              Update Patient
+            </div>
+            <div class="card-body">
+              <form role="form">
+                <div class="form-group">
+                  <label for="patient-id">ID</label>
+                  <input type="text" class="form-control" id="patient-id" />
+                </div>
+                <div class="form-group">
+                  <label for="patient-name">Name</label>
+                  <input type="text" class="form-control" id="patient-name" />
+                </div>
+                <div class="form-group">
+                  <label for="patient-dob">Date of Birth</label>
+                  <input type="text" class="form-control" id="patient-dob" />
+                </div>
+                </div>
+                <button type="submit" id="btnUpdate" class="btn btn-success submit">
+                  Update
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Delete from Database-->
+          <div class="card" id="deletePatientArea">
+            <div class="card-header">
+              Delete Patient
+            </div>
+            <div class="card-body">
+              <form role="form">
+                <div class="form-group">
+                  <label for="patient-id">ID</label>
+                  <input type="text" class="form-control" id="patient-id" />
+                </div>
+                <div class="form-group">
+                  <label for="patient-name">Name</label>
+                  <input type="text" class="form-control" id="patient-name" />
+                </div>
+                <div class="form-group">
+                  <label for="patient-dob">Date of Birth</label>
+                  <input type="text" class="form-control" id="patient-dob" />
+                </div>
+                </div>
+                <button type="submit" id="btnDelete" class="btn btn-success submit">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
       </div>
       <div class="container">
         <div class="col-lg-12">
@@ -131,7 +214,13 @@
 <script type="text/javascript">
 
 onload=document.getElementById('addPatientArea').style.display='none'
-
+onload=document.getElementById('viewPatientArea').style.display='none'
+onload=document.getElementById('updatePatientArea').style.display='none'
+onload=document.getElementById('deletePatientArea').style.display='none'
+onload=document.getElementById("patientRadioAdd").checked = false;
+onload=document.getElementById("patientRadioView").checked = false;
+onload=document.getElementById("patientRadioUpdate").checked = false;
+onload=document.getElementById("patientRadioDelete").checked = false;
   const submitBtn = document.querySelector('.submit');
   submitBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -176,10 +265,53 @@ onload=document.getElementById('addPatientArea').style.display='none'
       });
   });
 
-
-  const searchBtn = document.querySelector('.search');
-  searchBtn.addEventListener('click', (e) => {
+  //START Update
+  const updateBtn = document.querySelector('.submit');
+  updateBtn.addEventListener('click', (e) => {
     e.preventDefault();
+
+
+    let editedPatient = {
+      patientID: document.getElementById('patient-id').value.trim(),
+      patientName: document.getElementById('patient-name').value.trim(),
+      patientDob: document.getElementById('patient-dob').value.trim(),
+    };
+
+    console.log('updateBtn.onclick -> editedPatient', editedPatient);
+
+
+
+    fetch('/api/tickets', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(editedPatient),
+    })
+      //.then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          var patientName= document.getElementById('patient-name').value.trim();
+          document.getElementById('errorMessage').innerText = `${patientName} has been saved.`;
+          document.getElementById('patient-name').value = '';
+          document.getElementById('patient-id').value = '';
+          document.getElementById('patient-dob').value = '';
+        } else {
+
+          document.getElementById('errorMessage').innerText = "Name/ID/DOB format is incorrect";
+
+          document.getElementById('patient-name').value = '';
+          document.getElementById('patient-id').value = '';
+          document.getElementById('patient-dob').value = '';
+        }
+      })
+      .catch((error) => {
+        console.error('Error:'+error);
+      });
+  });
+
+  //END
+
   
     const runTicketQuery = (search) => {
       // document.getElementById('search-by-name').style.display='block'
@@ -193,35 +325,83 @@ onload=document.getElementById('addPatientArea').style.display='none'
         .then((ticketData) => {
           console.log('ticketData', ticketData);
           console.log('------------------------------------');
-          if (search == ticketData) {
-            document.getElementById('formMessage').innerText = "That patient already exists."
-          } else {
-            document.getElementById('formMessage').innerText = "Patient not found."
-          }
         })
         .catch((error) => {
           console.error('Error:', error);
         });
     };
 
-
   document.getElementById("searchForm").addEventListener("submit",(event)=> {
       event.preventDefault()
       var search=document.getElementById("search-by-name").value
       runTicketQuery(search);
+        if (search == ticketData) {
+          document.getElementById('formMessage').innerText = "That patient already exists."
+        } else {
+          document.getElementById('formMessage').innerText = "Patient not found."
+        }
     })
     document.getElementById("btnSearch").addEventListener('click', () => runTicketQuery(""));
 
     runTicketQuery();
 
-  })
-  function addButtonFunction() {
     var addVisible = document.getElementById("addPatientArea");
+    var viewVisible= document.getElementById("viewPatientArea");
+    var updateVisible=document.getElementById('updatePatientArea');
+    var deleteVisible=document.getElementById('deletePatientArea');
+
+  function addButtonFunction() {
     if (addVisible.style.display === "none") {
       addVisible.style.display = "block";
+      viewVisible.style.display="none";
+      updateVisible.style.display = "none";
+      deleteVisible.style.display = "none";
     } else {
 
     }
   }
 
+  function viewButtonFunction() {
+    if (addVisible.style.display === "none") {
+      addVisible.style.display = "none";
+      viewVisible.style.display="block";
+      updateVisible.style.display = "none";
+      deleteVisible.style.display = "none";
+    } else {
+
+    }
+  }
+
+  function updateButtonFunction() {
+    if (updateVisible.style.display === "none") {
+      addVisible.style.display = "none";
+      viewVisible.style.display="none";
+      updateVisible.style.display = "block";
+      deleteVisible.style.display = "none";
+    } else {
+
+    }
+  }
+  function deleteButtonFunction() {
+    if (deleteVisible.style.display === "none") {
+      addVisible.style.display = "none";
+      viewVisible.style.display="none";
+      updateVisible.style.display = "none";
+      deleteVisible.style.display = "block";
+    } else {
+
+    }
+  }
+
+
+
 </script>
+
+
+
+
+<!--
+
+  I did the best I could. I am still learning.
+
+-->

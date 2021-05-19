@@ -86,7 +86,8 @@
   <script type="text/javascript">
 
   onload=document.getElementById('show').style.display='none'
-  
+    
+
     const runTicketQuery = (search) => {
       document.getElementById('show').style.display='block'
       fetch(`/api/tickets?search=${search}`, {
@@ -106,6 +107,7 @@
 
             let listItem = document.createElement('li');
             listItem.classList.add('list-group-item', 'mt-4');
+
 
             const ticketEl = document.createElement('h2');
             ticketEl.textContent = `Ticket #${i + 1}`;
@@ -128,7 +130,7 @@
             listItem.appendChild(idEl);
             listItem.appendChild(dobEl);
 
-            // Append listItem to ticketList
+            // Append listItem to tableList
             ticketList.appendChild(listItem);
           }
         })
