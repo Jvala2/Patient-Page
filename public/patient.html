@@ -62,7 +62,7 @@
               <div class="form-group">
                 <label for="search-by-name">Search By Name</label>
                 <input type="text" class="form-control" id="search-by-name"/>
-                <button type="search" class="btn btn-success search">
+                <button type="search" id= "searchNameBtn" class="btn btn-success search" onclick="searchButtonFunction()">
                   Search
                 </button>
                 <div id= "formMessage">
@@ -122,7 +122,7 @@
                   <input type="text" class="form-control" id="patient-dob" />
                 </div>
                 </div>
-                <button type="submit" id="btnSearch" class="btn btn-success submit">
+                <button type="submit" id="btnAdd" class="btn btn-success submit">
                   Submit
                 </button>
               </form>
@@ -202,7 +202,9 @@
       <footer class="footer">
         <div class="container">
           <p>
+            <!---
             <a href="/api/tickets">API Ticket Link</a>
+            -->
           </p>
         </div>
       </footer>
@@ -212,7 +214,7 @@
 
 <!-- The code below is Javascript -->
 <script type="text/javascript">
-
+onload=document.getElementById("formMessage").style.display='none'
 onload=document.getElementById('addPatientArea').style.display='none'
 onload=document.getElementById('viewPatientArea').style.display='none'
 onload=document.getElementById('updatePatientArea').style.display='none'
@@ -266,6 +268,7 @@ onload=document.getElementById("patientRadioDelete").checked = false;
   });
 
   //START Update
+  /*
   const updateBtn = document.querySelector('.submit');
   updateBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -309,9 +312,12 @@ onload=document.getElementById("patientRadioDelete").checked = false;
         console.error('Error:'+error);
       });
   });
-
+*/
   //END
 
+
+
+  
   
     const runTicketQuery = (search) => {
       // document.getElementById('search-by-name').style.display='block'
@@ -324,6 +330,11 @@ onload=document.getElementById("patientRadioDelete").checked = false;
         .then((response) => response.json())
         .then((ticketData) => {
           console.log('ticketData', ticketData);
+          if (search == ticketData) {
+          document.getElementById('formMessage').innerText = "That patient already exists."
+        } else {
+          document.getElementById('formMessage').innerText = "Patient not found."
+        }
           console.log('------------------------------------');
         })
         .catch((error) => {
@@ -335,15 +346,21 @@ onload=document.getElementById("patientRadioDelete").checked = false;
       event.preventDefault()
       var search=document.getElementById("search-by-name").value
       runTicketQuery(search);
-        if (search == ticketData) {
-          document.getElementById('formMessage').innerText = "That patient already exists."
-        } else {
-          document.getElementById('formMessage').innerText = "Patient not found."
-        }
+
     })
     document.getElementById("btnSearch").addEventListener('click', () => runTicketQuery(""));
 
     runTicketQuery();
+
+  var searchVisible=document.getElementById("formMessage");
+
+  function searchButtonFunction() {
+    if (searchVisible.style.display === "none") {
+      searchVisible.style.display = "block";
+    } else {
+    }
+   }
+
 
     var addVisible = document.getElementById("addPatientArea");
     var viewVisible= document.getElementById("viewPatientArea");
@@ -402,6 +419,6 @@ onload=document.getElementById("patientRadioDelete").checked = false;
 
 <!--
 
-  I did the best I could. I am still learning.
+  I did the best I could. I am still learning, and I am eager to learn more on the job.
 
 -->

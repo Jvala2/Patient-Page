@@ -74,8 +74,10 @@
         <div class="container">
           <p>Control Panel</p>
           <p>
-            <a href="#" id="clear">Clear Tickets</a> |
-            <a href="/api/ticket">API Ticket Link</a>
+
+             <a href="#" id="clear">Clear Tickets</a> |
+            <a href="/api/ticket">API Ticket Link</a> 
+
           </p>
         </div>
       </footer>
@@ -153,7 +155,7 @@
         .then((response) => response.json())
         .then((data) => {
           let ticketList = document.getElementById('ticketList');
-          waitList.innerHTML = '';
+          ticketList.innerHTML = '';
 
         })
         .catch((error) => {
